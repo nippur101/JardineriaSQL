@@ -315,7 +315,70 @@ left join cliente cl on cl.codigo_empleado_rep_ventas=em1.codigo_empleado
 join empleado em2 on em2.codigo_empleado=em1.codigo_jefe
 where cl.codigo_cliente is null;
 
+#========================================================================================================================================================================
+#Consultas resumen
+#¿Cuántos empleados hay en la compañía?
 
+select count(*) as NroEmpleados from empleado;
+
+#¿Cuántos clientes tiene cada país?
+
+select pais,count(*) from cliente
+group by pais;
+
+#¿Cuál fue el pago medio en 2009?
+
+select AVG(total) from pago
+where YEAR(fecha_pago)=2009;
+
+#¿Cuántos pedidos hay en cada estado? Ordena el resultado de forma
+#descendente por el número de pedidos.
+
+select estado,count(codigo_pedido) as cant_pedidos from pedido
+group by estado
+order by cant_pedidos desc;
+
+#Calcula el precio de venta del producto más caro y más barato en una misma consulta.
+
+SELECT 
+    MAX(precio_venta) AS precio_mas_caro,
+    MIN(precio_venta) AS precio_mas_barato
+FROM 
+    producto;
+    
+#Calcula el número de clientes que tiene la empresa.
+
+select count(codigo_cliente) as NumeroClientesEmpresa from cliente;
+
+#¿Cuántos clientes existen con domicilio en la ciudad de Madrid?
+
+select count(codigo_cliente) from cliente
+where ciudad="Madrid";
+
+#¿Calcula cuántos clientes tiene cada una de las ciudades que empiezan por M?
+
+select ciudad, count(*) as totalClientes from cliente
+where ciudad like "M%"
+group by ciudad;
+
+#Devuelve el nombre de los representantes de ventas y el número de
+#clientes al que atiende cada uno.
+
+select em.nombre, count(codigo_cliente) from empleado em
+join cliente cl on cl.codigo_empleado_rep_ventas=em.codigo_empleado
+group by cl.codigo_empleado_rep_ventas;
+
+#Calcula el número de clientes que no tiene asignado representante de ventas.
+
+select count(*) from cliente 
+where codigo_empleado_rep_ventas is null;
+
+#Calcula la fecha del primer y último pago realizado por cada uno de los
+#clientes. El listado deberá mostrar el nombre y los apellidos de cada cliente.
+
+select cl.nombre_cliente, cl.apellido_contacto,  min(fecha_pago), max(fecha_pago) from pago pg
+join cliente cl on cl.codigo_cliente=pg.codigo_cliente
+group by cl.nombre_cliente;
 
 
 
